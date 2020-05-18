@@ -1,0 +1,40 @@
+version: '3.7'
+
+services:
+
+  software:
+    build:
+      context: './build/php-apache'
+    container_name: 'software'
+    depends_on:
+      - 'database'
+    networks:
+      - 'frontend'
+      - 'backend'
+    ports:
+      - '80:80'
+      - '443:80'
+    restart: 'always'
+
+  database:
+    build:
+      context: './build/mariadb'
+    container_name: 'database'
+    environment:
+      TZ: 'America/Vancouver'
+      MYSQL_ALLOW_EMPTY_PASSWORD: 'no'
+      MYSQL_ROOT_PASSWORD: 'password'
+      MYSQL_DATABASE: 'domainmod'
+      MYSQL_USER: 'domainmod'
+      MYSQL_PASSWORD: 'password'
+    networks:
+      - 'backend'
+    ports:
+      - '3306:3306'
+    restart: 'always'
+    volumes:
+      - './database:/var/lib/mysql'
+
+networks:
+  backend:
+  frontend:
