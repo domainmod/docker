@@ -7,7 +7,7 @@ services:
       context: './build/php-apache'
     container_name: 'domainmod_app'
     depends_on:
-      - 'domainmod_db'
+      - 'db'
     ports:
       - '80:80'
       - '443:80'
