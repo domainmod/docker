@@ -2,24 +2,21 @@ version: '3.7'
 
 services:
 
-  software:
+  domainmod_app:
     build:
       context: './build/php-apache'
-    container_name: 'software'
+    container_name: 'domainmod_app'
     depends_on:
-      - 'database'
-    networks:
-      - 'frontend'
-      - 'backend'
+      - 'domainmod_db'
     ports:
       - '80:80'
       - '443:80'
-    restart: 'always'
+    restart: 'unless-stopped'
 
-  database:
+  domainmod_db:
     build:
       context: './build/mariadb'
-    container_name: 'database'
+    container_name: 'domainmod_db'
     environment:
       TZ: 'America/Vancouver'
       MYSQL_ALLOW_EMPTY_PASSWORD: 'no'
@@ -27,14 +24,8 @@ services:
       MYSQL_DATABASE: 'domainmod'
       MYSQL_USER: 'domainmod'
       MYSQL_PASSWORD: 'password'
-    networks:
-      - 'backend'
-    ports:
-      - '3306:3306'
-    restart: 'always'
+    expose:
+      - '3306'
+    restart: 'unless-stopped'
     volumes:
       - './database:/var/lib/mysql'
-
-networks:
-  backend:
-  frontend:
