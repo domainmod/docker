@@ -16,6 +16,7 @@ RUN apt-get update \
     && docker-php-ext-install gettext mysqli pdo pdo_mysql simplexml
 RUN cp /usr/share/zoneinfo/America/Vancouver /etc/localtime \
     && echo "America/Vancouver" > /etc/timezone
+COPY php.ini-production /usr/local/etc/php/php.ini
 RUN sed -i -e "s/# $LOCALE1/$LOCALE1/" /etc/locale.gen
 RUN sed -i -e "s/# $LOCALE2/$LOCALE2/" /etc/locale.gen
 RUN sed -i -e "s/# $LOCALE3/$LOCALE3/" /etc/locale.gen
