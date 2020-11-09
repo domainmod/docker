@@ -2,7 +2,7 @@ version: '3.7'
 
 services:
 
-  domainmod_app:
+  app:
     build:
       context: './build/php-apache'
     container_name: 'domainmod_app'
@@ -13,7 +13,7 @@ services:
       - '443:80'
     restart: 'unless-stopped'
 
-  domainmod_db:
+  db:
     build:
       context: './build/mariadb'
     container_name: 'domainmod_db'
