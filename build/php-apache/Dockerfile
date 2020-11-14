@@ -11,12 +11,17 @@ ENV LOCALE9="pt_PT.UTF-8"
 ENV LOCALE10="ru_RU.UTF-8"
 RUN echo "ServerName localhost" >> /etc/apache2/apache2.conf
 RUN apt-get update \
-    && apt-get install -y curl gettext git libxml2 libxml2-dev locales tzdata \
+    && apt-get install -y cron curl gettext git libxml2 libxml2-dev locales tzdata \
     && apt-get clean -y \
     && docker-php-ext-install gettext mysqli pdo pdo_mysql simplexml
 RUN cp /usr/share/zoneinfo/America/Vancouver /etc/localtime \
     && echo "America/Vancouver" > /etc/timezone
 COPY php.ini-production /usr/local/etc/php/php.ini
+COPY cron /etc/cron.d/cron
+RUN chmod 0644 /etc/cron.d/cron
+RUN crontab /etc/cron.d/cron
+RUN mkdir -p /var/log/cron
+RUN sed -i 's/^exec /service cron start\n\nexec /' /usr/local/bin/apache2-foreground
 RUN sed -i -e "s/# $LOCALE1/$LOCALE1/" /etc/locale.gen
 RUN sed -i -e "s/# $LOCALE2/$LOCALE2/" /etc/locale.gen
 RUN sed -i -e "s/# $LOCALE3/$LOCALE3/" /etc/locale.gen
